@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Amaira Boutique — Unit 20 Testing Demo 4</title>
+<style>
+:root{--ink:#3f302c;--muted:#756760;--paper:#fcfaf7;--cream:#f2e3d9;--line:#e5d3c7;--wine:#a95745;--green:#58745c;--red:#aa5148;--gold:#bd8d51}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.5}
+button,input{font:inherit}button{cursor:pointer}
+.topbar{background:var(--ink);color:#fff;padding:8px 12px;text-align:center;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+header{position:sticky;top:0;z-index:20;background:rgba(251,250,248,.97);border-bottom:1px solid var(--line)}
+.global-search-wrap{background:#fff;border-bottom:1px solid var(--line)}
+.global-search{padding-top:10px;padding-bottom:10px}
+.global-search-box{display:flex;align-items:center;gap:10px;background:#f7f4f1;border:2px solid var(--line);border-radius:14px;padding:5px 6px 5px 12px;box-shadow:0 4px 14px rgba(39,54,60,.06)}
+.search-icon{font-size:22px;color:var(--muted);line-height:1}
+#globalSearch{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--ink);padding:10px 4px}
+#globalSearch::placeholder{color:#8a9294}
+.search-submit{border:0;border-radius:10px;background:var(--ink);color:#fff;padding:10px 15px;font-weight:900}
+.search-submit:hover{background:var(--wine)}
+
+.shell{max-width:1180px;margin:auto;padding:0 22px}
+.nav{min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none}
+.mark{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--wine);color:#fff;font:18px Georgia,serif}
+.brandname{font:700 21px Georgia,serif;letter-spacing:.12em}.brandsub{display:block;color:var(--muted);font-size:9px;letter-spacing:.2em}
+nav ul{display:flex;list-style:none;gap:16px;padding:0;margin:0;align-items:center}
+nav a{font-size:13px;font-weight:800;color:#4e595d;text-decoration:none}
+nav a:hover{color:var(--wine)}
+.count{display:inline-grid;place-items:center;min-width:21px;height:21px;border-radius:50%;background:var(--wine);color:#fff;font-size:11px;margin-left:4px}
+.section{padding:28px 0}.head{display:flex;justify-content:space-between;gap:18px;align-items:end;margin-bottom:16px}
+.eyebrow{color:var(--wine);font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:900}
+h1{font:700 56px/1.03 Georgia,serif;margin:12px 0 14px}
+h2{font:700 31px Georgia,serif;margin:4px 0}
+.muted{color:var(--muted)}
+.btn{border:0;border-radius:11px;padding:11px 15px;font-weight:900}
+.btn.dark{background:var(--ink);color:#fff}.btn.light{background:#fff;border:1px solid var(--line);color:var(--ink)}.btn.wine{background:var(--wine);color:#fff}
+.hero{padding:34px 0 16px}.hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:22px}
+.hero-copy{background:var(--cream);padding:48px;border-radius:26px}.hero-copy p{max-width:650px;color:#5d686c;font-size:17px}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.hero-visual{min-height:410px;border-radius:26px;background:linear-gradient(135deg,#d69f86,#8f4b3d);display:grid;place-items:center;position:relative;overflow:hidden}
+.hero-card{width:65%;height:72%;background:#f4eee8;border-radius:24px;box-shadow:0 25px 50px rgba(0,0,0,.15);position:relative;padding:18px}
+.hero-card:before{content:"";display:block;width:52%;height:68%;margin:14% auto 0;background:linear-gradient(145deg,#a95745,#c28a7f);border-radius:48% 48% 18% 18%}
+.hero-card:after{content:"AMAIRA";position:absolute;left:18px;top:18px;background:var(--ink);color:#fff;border-radius:15px;padding:6px 10px;font-size:10px;letter-spacing:.16em;font-weight:900}
+.carousel-wrap{padding:0 0 15px}.carousel{background:#fff;border:1px solid var(--line);border-radius:22px;overflow:hidden;position:relative}
+.track{display:flex;transition:transform .45s ease}.slide{min-width:100%;position:relative}.slide-art{height:280px;padding:26px;display:flex;align-items:end}
+.slide-1{background:linear-gradient(120deg,#944d3f,#d79c84)}.slide-2{background:linear-gradient(120deg,#bfa78d,#eadbc9)}.slide-3{background:linear-gradient(120deg,#4f6a55,#9eae8f)}
+.slide-copy{color:#fff;max-width:600px}.slide-copy h3{font:700 32px Georgia,serif;margin:0 0 6px}.slide-copy p{margin:0;font-weight:700}
+.carousel-controls{position:absolute;right:14px;bottom:14px;display:flex;gap:8px}.carousel-controls button{border:0;border-radius:50%;width:40px;height:40px;background:rgba(255,255,255,.92);font-weight:900}
+.product-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.product-card{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}.product-art{height:290px;background:linear-gradient(140deg,var(--a),var(--b));position:relative;display:grid;place-items:center;overflow:hidden}
+.art-label{position:absolute;top:12px;left:12px;background:#fff;border-radius:99px;padding:5px 8px;font-size:9px;letter-spacing:.12em;font-weight:900}.art-mark{position:absolute;right:12px;bottom:12px;width:36px;height:36px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:20px}
+.fashion-shape{width:44%;height:68%;background:rgba(255,255,255,.84);border-radius:48% 48% 16% 16%;box-shadow:0 20px 35px rgba(0,0,0,.12);position:relative}.fashion-shape:before{content:"";position:absolute;left:14%;right:14%;top:-7%;height:29%;border-radius:50%;background:rgba(255,255,255,.93)}
+.product-body{padding:14px}.category-label{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.1em;font-weight:900}.product-body h3{font:700 17px Georgia,serif;margin:5px 0 8px}
+.product-row{display:flex;justify-content:space-between;align-items:center;gap:10px}.stock{color:var(--green);font-size:11px;font-weight:900}.meta{font-size:12px;color:var(--muted);min-height:36px}
+.card-actions{display:flex;gap:7px}.card-actions .btn{flex:1;padding:9px 7px;font-size:11px}
+.category-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.category{background:#fff;border:1px solid var(--line);border-radius:17px;padding:18px;text-align:left;font-weight:900}
+.category span{display:block;color:var(--muted);font-weight:500;font-size:12px;margin-top:4px}.banner{margin-top:18px;background:#273a34;color:#fff;border-radius:20px;padding:22px}.banner strong{font:700 24px Georgia,serif}
+.searchbar{display:flex;gap:8px;margin-bottom:14px}.searchbar input{flex:1;min-width:0;padding:12px;border:1px solid var(--line);border-radius:11px;background:#fff}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.chip{background:#fff;border:1px solid var(--line);padding:8px 11px;border-radius:99px;font-size:12px;font-weight:900}.chip.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.view{display:none}.view.active{display:block}
+.auth{max-width:680px;margin:42px auto}.cardbox{background:#fff;border:1px solid var(--line);border-radius:20px;padding:25px}
+.tabs{display:flex;border-bottom:1px solid var(--line);margin:16px 0}.tab{flex:1;padding:11px;border:0;background:transparent;font-weight:900;color:var(--muted);border-bottom:3px solid transparent}.tab.active{color:var(--ink);border-bottom-color:var(--wine)}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:13px;font-weight:900}.field input{padding:12px;border:1px solid var(--line);border-radius:10px}
+.msg{display:none;margin-top:14px;padding:12px;border-radius:11px;font-weight:700}.msg.show{display:block}.msg.ok{background:#edf8f3;color:var(--green)}.msg.err{background:#fff0f0;color:var(--red)}
+.cartpanel{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px}.cartrow{display:grid;grid-template-columns:1fr auto auto;gap:14px;padding:13px 0;border-bottom:1px solid var(--line);align-items:center}.qty{display:flex;align-items:center;gap:5px}.qty button{width:29px;height:29px;border:1px solid var(--line);border-radius:7px;background:#fff}
+.modal{position:fixed;inset:0;background:rgba(20,25,27,.56);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}.modal.show{display:flex}.modalbox{max-width:720px;width:100%;background:#fff;border-radius:22px;overflow:hidden}.modalgrid{display:grid;grid-template-columns:1fr 1fr}.modalart{min-height:350px}.modalcopy{padding:26px}.close{float:right;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:#fff}
+footer{border-top:1px solid var(--line);margin-top:42px;padding:30px 0 45px;color:var(--muted)}.footgrid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:24px}.foot-title{font-weight:900;color:var(--ink)}
+.toast{position:fixed;right:18px;bottom:18px;background:var(--ink);color:#fff;padding:13px 16px;border-radius:12px;display:none;z-index:60}.toast.show{display:block}
+.loading{position:fixed;inset:0;background:rgba(251,250,248,.94);z-index:100;display:grid;place-items:center}.loading-box{text-align:center}.spinner{width:38px;height:38px;border:4px solid #ddd0c6;border-top-color:var(--wine);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 12px}@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:920px){.hero-grid{grid-template-columns:1fr}.product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.nav ul{gap:10px}}
+/* Intentionally imperfect mobile state for learner testing */
+@media(max-width:560px){.shell{padding:0 13px}.nav{padding:10px 0;align-items:flex-start}.nav ul{gap:18px;white-space:nowrap}.hero-copy{padding:30px 20px}h1{font-size:40px}.category-strip{grid-template-columns:1fr 1fr}.formgrid{grid-template-columns:1fr}.modalgrid{grid-template-columns:1fr}.footgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="loading" id="loading"><div class="loading-box"><div class="spinner"></div><strong>Preparing the latest collection…</strong></div></div>
+
+<div class="topbar">Autumn Edit · Free delivery on orders over SAR 350 · Terracotta Clay Edition</div>
+<header><div class="shell nav">
+  <a class="brand" href="#" data-route="home"><span class="mark">A</span><span><span class="brandname">AMAIRA</span><span class="brandsub">BOUTIQUE</span></span></a>
+  <nav><ul>
+    <li><a href="#" data-route="home">Home</a></li><li><a href="#" data-route="shop">Shop / Products</a></li>
+    <li><a href="#" data-route="categories">Categories</a></li><li><a href="#" data-route="auth">Login / Sign Up</a></li>
+    <li><a href="#" data-route="cart">Cart <span class="count" id="cartCount">0</span></a></li>
+  </ul></nav>
+</div></header>
+
+<div class="global-search-wrap">
+  <div class="shell global-search">
+    <label class="global-search-box" aria-label="Search the boutique">
+      <span class="search-icon">⌕</span>
+      <input id="globalSearch" type="search" placeholder="Search dresses, abayas, handbags, shoes..." autocomplete="off">
+      <button id="globalSearchBtn" class="search-submit" type="button">Search</button>
+    </label>
+  </div>
+</div>
+
+<main>
+<section id="home" class="view active">
+  <div class="shell hero"><div class="hero-grid">
+    <div class="hero-copy">
+      <div class="eyebrow">Amaira Boutique · New Season</div>
+      <h1>Modern elegance, thoughtfully styled.</h1>
+      <p>Discover dresses, abayas, handbags, shoes and everyday pieces curated for a polished wardrobe.</p>
+      <div class="hero-actions"><button class="btn dark" data-route="shop" type="button">Shop Now</button><button class="btn light" data-route="categories" type="button">Explore Collection</button></div>
+    </div>
+    <div class="hero-visual"><div class="hero-card"></div></div>
+  </div></div>
+
+  <div class="shell carousel-wrap">
+    <div class="carousel">
+      <div class="track" id="track">
+        <div class="slide"><div class="slide-art slide-1"><div class="slide-copy"><h3>Evening Edit</h3><p>Timeless silhouettes for your next occasion.</p></div></div></div>
+        <div class="slide"><div class="slide-art slide-2"><div class="slide-copy"><h3>Soft Neutrals</h3><p>Refined layers designed for effortless styling.</p></div></div></div>
+        <div class="slide"><div class="slide-art slide-3"><div class="slide-copy"><h3>Autumn Collection</h3><p>Fresh tones and new-season favourites.</p></div></div></div>
+      </div>
+      <div class="carousel-controls"><button id="prevSlide" type="button" aria-label="Previous">‹</button><button id="nextSlide" type="button" aria-label="Next">›</button></div>
+    </div>
+  </div>
+
+  <div class="shell section">
+    <div class="head"><div><div class="eyebrow">Featured</div><h2>New arrivals & seasonal favourites</h2><p class="muted">A refined selection to start the season.</p></div><button class="btn light" data-route="shop" type="button">View all</button></div>
+    <div class="product-grid">
+    <article class="product-card" data-category="Dresses" data-name="elegant satin evening dress">
+      
+    <div class="product-art" style="--a:#1f1c1b;--b:#9a7364">
+      <span class="art-label">AMAIRA</span>
+      <span class="art-mark">+</span>
+      <div class="fashion-shape"></div>
+    </div>
+      <div class="product-body">
+        <span class="category-label">Dresses</span>
+        <h3>Elegant Satin Evening Dress</h3>
+        <div class="product-row"><strong>SAR 299</strong><span class="stock">In Stock</span></div>
+        <p class="meta">Colour: Black · Sizes: S, M, L, XL</p>
+        <div class="card-actions">
+          <button class="btn light view-details" type="button">View Details</button>
+          <button class="btn dark add-cart" type="button" data-name="Elegant Satin Evening Dress" data-price="299">Add to Cart</button>
+        </div>
+      </div>
+    </article>
+    <article class="product-card" data-category="Abayas" data-name="linen abaya">
+      
+    <div class="product-art" style="--a:#c7b399;--b:#816a55">
+      <span class="art-label">AMAIRA</span>
+      <span class="art-mark">+</span>
+      <div class="fashion-shape"></div>
+    </div>
+      <div class="product-body">
+        <span class="category-label">Abayas</span>
+        <h3>Linen Abaya</h3>
+        <div class="product-row"><strong>SAR 249</strong><span class="stock">In Stock</span></div>
+        <p class="meta">Colour: Sand · Sizes: S, M, L, XL</p>
+        <div class="card-actions">
+          <button class="btn light view-details" type="button">View Details</button>
+          <button class="btn dark add-cart" type="button" data-name="Linen Abaya" data-price="249">Add to Cart</button>
+        </div>
+      </div>
+    </article>
+    <article class="product-card" data-category="Tops & Blouses" data-name="silk bow blouse">
+      
+    <div class="product-art" style="--a:#efe2d1;--b:#c59d80">
+      <span class="art-label">AMAIRA</span>
+      <span class="art-mark">+</span>
+      <div class="fashion-shape"></div>
+    </div>
+      <div class="product-body">
+        <span class="category-label">Tops & Blouses</span>
+        <h3>Silk Bow Blouse</h3>
+        <div class="product-row"><strong>SAR 179</strong><span class="stock">In Stock</span></div>
+        <p class="meta">Colour: Ivory · Sizes: S, M, L, XL</p>
+        <div class="card-actions">
+          <button class="btn light view-details" type="button">View Details</button>
+          <button class="btn dark add-cart" type="button" data-name="Silk Bow Blouse" data-price="179">Add to Cart</button>
+        </div>
+      </div>
+    </article>
+    <article class="product-card" data-category="Trousers & Skirts" data-name="tailored wide-leg trousers">
+      
+    <div class="product-art" style="--a:#4e5254;--b:#25292b">
+      <span class="art-label">AMAIRA</span>
+      <span class="art-mark">+</span>
+      <div class="fashion-shape"></div>
+    </div>
+      <div class="product-body">
+        <span class="category-label">Trousers & Skirts</span>
+        <h3>Tailored Wide-Leg Trousers</h3>
+        <div class="product-row"><strong>SAR 189</strong><span class="stock">In Stock</span></div>
+        <p class="meta">Colour: Charcoal · Sizes: S, M, L, XL</p>
+        <div class="card-actions">
+          <button class="btn light view-details" type="button">View Details</button>
+          <button class="btn dark add-cart" type="button" data-name="Tailored Wide-Leg Trousers" data-price="189">Add to Cart</button>
+        </div>
+      </div>
+    </article></div>
+    <div class="banner"><strong>Welcome to Amaira Boutique.</strong><p>Browse freely. Create an account when you are ready to continue to checkout and place an order.</p></div>
+  </div>
+
+  <div class="shell section">
+    <div class="head"><div><div class="eyebrow">Browse</div><h2>Shop by category</h2></div></div>
+    <div class="category-strip">
+      <button class="category" data-jump="Dresses" type="button">Dresses<span>Evening & occasion</span></button>
+      <button class="category" data-jump="Abayas" type="button">Abayas<span>Timeless layers</span></button>
+      <button class="category" data-jump="Handbags" type="button">Handbags<span>Statement pieces</span></button>
+      <button class="category" data-jump="New Arrivals" type="button">New Arrivals<span>Latest edit</span></button>
+    </div>
+  </div>
+</section>
+
+<section id="shop" class="view">
+  <div class="shell section">
+    <div class="head"><div><div class="eyebrow">Catalogue</div><h2>Products</h2><p class="muted">Browse the full collection.</p></div></div>
+    <p class="muted" style="margin:0 0 14px">Use the search bar above to find products by name. Category filters can also be used below.</p>
+    <div class="chips">
+      <button class="chip active" data-filter="All" type="button">All</button>
+      <button class="chip" data-filter="Dresses" type="button">Dresses</button>
+      <button class="chip" data-filter="Abayas" type="button">Abayas</button>
+      <button class="chip" data-filter="Tops & Blouses" type="button">Tops & Blouses</button>
+      <button class="chip" data-filter="Trousers & Skirts" type="button">Trousers & Skirts</button>
+      <button class="chip" data-filter="Handbags" type="button">Handbags</button>
+      <button class="chip" data-filter="Shoes" type="button">Shoes</button>
+      <button class="chip" data-filter="Accessories" type="button">Accessories</button>
+      <button class="chip" data-filter="New Arrivals" type="button">New Arrivals</button>
+    </div>
+    <div id="products" class="product-grid">
+    <article class="product-card" data-category="Dresses" data-name="elegant satin evening dress">
+      
+    <div class="product-art" style="--a:#1f1c1b;--b:#9a7364">
+      <span class="art-label">AMAIRA</span>
+      <span class="art-mark">+</span>
+      <div class="fashion-shape"></div>
+    </div>
+      <div class="product-body">
+        <span class="category-label">Dresses</span>
+        <h3>Elegant Satin Evening Dress</h3>
+        <div class="product-row"><strong>SAR 299</strong><span class="stock">In Stock</span></div>
+        <p class="meta">Colour: Black · Sizes: S, M, L, XL</p>
+        <div class="card-actions">
+          <button class="btn light view-details" type="button">View Details</button>
+          <button class="btn dark add-cart" type="button" data-name="Elegant Satin Evening Dress" data-price="299">Add to Cart</button>
+        </div>
+      </div>
+    </article>
+    <article class="product-card" data-category="Abayas" data-name="linen abaya">
+      
+    <div class="product-art" style="--a:#c7b399;--b:#816a55">
+      <span class="art-label">AMAIRA</span>
+      <span class="art-mark">+</span>
+      <div class="fashion-shape"></div>
+    </div>
+      <div class="product-body">
+        <span class="category-label">Abayas</span>
+        <h3>Linen Abaya</h3>
+        <div class="product-row"><strong>SAR 249</strong><span class="stock">In Stock</span></div>
+        <p class="meta">Colour: Sand · Sizes: S, M, L, XL</p>
+        <div class="card-actions">
+          <button class="btn light view-details" type="button">View Details</button>
+          <button class="btn dark add-cart" type="button" data-name="Linen Abaya" data-price="249">Add to Cart</button>
+        </div>
+      </div>
+    </article>
+    <article class="product-card" data-category="Tops & Blouses" data-name="silk bow blouse">
+      
+    <div class="product-art" style="--a:#efe2d1;--b:#c59d80">
+      <span class="art-label">AMAIRA</span>
+      <span class="art-mark">+</span>
+      <div class="fashion-shape"></div>
+    </div>
+      <div class="product-body">
+        <span class="category-label">Tops & Blouses</span>
+        <h3>Silk Bow Blouse</h3>
+        <div class="product-row"><strong>SAR 179</strong><span class="stock">In Stock</span></div>
+        <p class="meta">Colour: Ivory · Sizes: S, M, L, XL</p>
+        <div class="card-actions">
+          <button class="btn light view-details" type="button">View Details</button>
+          <button class="btn dark add-cart" type="button" data-name="Silk Bow Blouse" data-price="179">Add to Cart</button>
+        </div>
+      </div>
+    </article>
+    <article class="product-card" data-category="Trousers & Skirts" data-name="tailored wide-leg trousers">
+      
+    <div class="product-art" style="--a:#4e5254;--b:#25292b">
+      <span class="art-label">AMAIRA</span>
+      <span class="art-mark">+</span>
+      <div class="fashion-shape"></div>
+    </div>
+      <div class="product-body">
+        <span class="category-label">Trousers & Skirts</span>
+        <h3>Tailored Wide-Leg Trousers</h3>
+        <div class="product-row"><strong>SAR 189</strong><span class="stock">In Stock</span></div>
+        <p class="meta">Colour: Charcoal · Sizes: S, M, L, XL</p>
+        <div class="card-actions">
+          <button class="btn light view-details" type="button">View Details</button>
+          <button class="btn dark add-cart" type="button" data-name="Tailored Wide-Leg Trousers" data-price="189">Add to Cart</button>
+        </div>
+      </div>
+    </article>
+    <article class="product-card" data-category="Handbags" data-name="structured mini handbag">
+      
+    <div class="product-art" style="--a:#6b253a;--b:#9d6b55">
+      <span class="art-label">AMAIRA</span>
+      <span class="art-mark">+</span>
+      <div class="fashion-shape"></div>
+    </div>
+      <div class="product-body">
+        <span class="category-label">Handbags</span>
+        <h3>Structured Mini Handbag</h3>
+        <div class="product-row"><strong>SAR 229</strong><span class="stock">In Stock</span></div>
+        <p class="meta">Colour: Burgundy · Sizes: S, M, L, XL</p>
+        <div class="card-actions">
+          <button class="btn light view-details" type="button">View Details</button>
+          <button class="btn dark add-cart" type="button" data-name="Structured Mini Handbag" data-price="229">Add to Cart</button>
+        </div>
+      </div>
+    </article>
+    <article class="product-card" data-category="Shoes" data-name="pointed slingback shoes">
+      
+    <div class="product-art" style="--a:#604c43;--b:#c7a36c">
+      <span class="art-label">AMAIRA</span>
+      <span class="art-mark">+</span>
+      <div class="fashion-shape"></div>
+    </div>
+      <div class="product-body">
+        <span class="category-label">Shoes</span>
+        <h3>Pointed Slingback Shoes</h3>
+        <div class="product-row"><strong>SAR 279</strong><span class="stock">In Stock</span></div>
+        <p class="meta">Colour: Mocha · Sizes: S, M, L, XL</p>
+        <div class="card-actions">
+          <button class="btn light view-details" type="button">View Details</button>
+          <button class="btn dark add-cart" type="button" data-name="Pointed Slingback Shoes" data-price="279">Add to Cart</button>
+        </div>
+      </div>
+    </article>
+    <article class="product-card" data-category="Accessories" data-name="pearl drop earrings">
+      
+    <div class="product-art" style="--a:#d4b07e;--b:#b7854d">
+      <span class="art-label">AMAIRA</span>
+      <span class="art-mark">+</span>
+      <div class="fashion-shape"></div>
+    </div>
+      <div class="product-body">
+        <span class="category-label">Accessories</span>
+        <h3>Pearl Drop Earrings</h3>
+        <div class="product-row"><strong>SAR 99</strong><span class="stock">In Stock</span></div>
+        <p class="meta">Colour: Gold · Sizes: S, M, L, XL</p>
+        <div class="card-actions">
+          <button class="btn light view-details" type="button">View Details</button>
+          <button class="btn dark add-cart" type="button" data-name="Pearl Drop Earrings" data-price="99">Add to Cart</button>
+        </div>
+      </div>
+    </article>
+    <article class="product-card" data-category="New Arrivals" data-name="autumn edit blazer">
+      
+    <div class="product-art" style="--a:#5d7056;--b:#92a07c">
+      <span class="art-label">AMAIRA</span>
+      <span class="art-mark">+</span>
+      <div class="fashion-shape"></div>
+    </div>
+      <div class="product-body">
+        <span class="category-label">New Arrivals</span>
+        <h3>Autumn Edit Blazer</h3>
+        <div class="product-row"><strong>SAR 329</strong><span class="stock">In Stock</span></div>
+        <p class="meta">Colour: Olive · Sizes: S, M, L, XL</p>
+        <div class="card-actions">
+          <button class="btn light view-details" type="button">View Details</button>
+          <button class="btn dark add-cart" type="button" data-name="Autumn Edit Blazer" data-price="329">Add to Cart</button>
+        </div>
+      </div>
+    </article></div>
+    <p id="noResults" class="muted" style="display:none;text-align:center;padding:30px">No products matched your search.</p>
+  </div>
+</section>
+
+<section id="categories" class="view">
+  <div class="shell section"><div class="head"><div><div class="eyebrow">Categories</div><h2>Explore the boutique</h2></div></div>
+    <div class="category-strip">
+      <button class="category" data-jump="Dresses" type="button">Dresses<span>Evening & occasion</span></button>
+      <button class="category" data-jump="Abayas" type="button">Abayas<span>Timeless layers</span></button>
+      <button class="category" data-jump="Tops & Blouses" type="button">Tops & Blouses<span>Everyday polish</span></button>
+      <button class="category" data-jump="Trousers & Skirts" type="button">Trousers & Skirts<span>Clean silhouettes</span></button>
+      <button class="category" data-jump="Handbags" type="button">Handbags<span>Statement pieces</span></button>
+      <button class="category" data-jump="Shoes" type="button">Shoes<span>Finishing touches</span></button>
+      <button class="category" data-jump="Accessories" type="button">Accessories<span>Jewellery & more</span></button>
+      <button class="category" data-jump="New Arrivals" type="button">New Arrivals<span>Latest edit</span></button>
+    </div>
+  </div>
+</section>
+
+<section id="auth" class="view">
+  <div class="shell auth"><div class="cardbox">
+    <div class="eyebrow">Customer account</div><h2>Welcome back</h2><p class="muted">Login or create an account before checkout.</p>
+    <div class="tabs"><button id="loginTab" class="tab active" type="button">Login</button><button id="signupTab" class="tab" type="button">Sign Up</button></div>
+
+    <form id="loginForm">
+      <div class="formgrid">
+        <div class="field full"><label for="loginEmail">Email address</label><input id="loginEmail" type="email" placeholder="you@example.com"></div>
+        <div class="field full"><label for="loginPassword">Password</label><input id="loginPassword" type="password" placeholder="Enter password"></div>
+      </div>
+      <button class="btn wine" type="submit" style="margin-top:15px">Login</button>
+      <a id="forgot" href="#" style="margin-left:10px;font-size:13px;text-decoration:underline">Forgot Password?</a>
+      <div id="loginMsg" class="msg"></div>
+    </form>
+
+    <form id="signupForm" style="display:none">
+      <div class="formgrid">
+        <div class="field"><label for="fullName">Full name</label><input id="fullName" type="text" placeholder="Your name"></div>
+        <div class="field"><label for="signupEmail">Email address</label><input id="signupEmail" type="email" placeholder="you@example.com"></div>
+        <div class="field"><label for="signupPassword">Password</label><input id="signupPassword" type="password" placeholder="Create password"></div>
+        <div class="field"><label for="confirmPassword">Confirm password</label><input id="confirmPassword" type="password" placeholder="Confirm password"></div>
+      </div>
+      <button class="btn wine" type="submit" style="margin-top:15px">Create Account</button>
+      <div id="signupMsg" class="msg"></div>
+    </form>
+    <p><a href="#" data-route="home" style="text-decoration:underline">Return to Home</a></p>
+  </div></div>
+</section>
+
+<section id="cart" class="view">
+  <div class="shell section"><div class="head"><div><div class="eyebrow">Shopping cart</div><h2>Your selection</h2><p class="muted">Review selected products before placing an order.</p></div></div><div id="cartPanel" class="cartpanel"></div></div>
+</section>
+</main>
+
+<footer>
+  <div class="shell footgrid">
+    <div><div class="foot-title">Amaira Boutique</div><p>Modern, elegant fashion for every occasion.</p><p>hello@amairaboutique.example · +966 50 000 0000</p></div>
+    <div><div class="foot-title">Quick links</div><p><a href="#" data-route="home">Home</a></p><p><a href="#" data-route="shop">Products</a></p><p><a href="#" data-route="auth">Login / Sign Up</a></p></div>
+    <div><div class="foot-title">Customer care</div><p>Shipping & Delivery</p><p>Returns</p><p>Privacy</p></div>
+  </div>
+</footer>
+
+<div id="modal" class="modal"><div class="modalbox"><div class="modalgrid">
+  <div id="modalArt" class="modalart"></div><div class="modalcopy">
+    <button id="closeModal" class="close" type="button">×</button><div class="eyebrow" id="modalCat"></div><h2 id="modalName"></h2><p id="modalPrice" style="font-weight:900;font-size:20px"></p><p id="modalInfo" class="muted"></p><button id="modalAdd" class="btn dark" type="button">Add to Cart</button>
+  </div>
+</div></div></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+const state={route:"home",filter:"All",search:"",cart:[],slide:0};
+
+function route(id){
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));
+  state.route=id;
+  if(id==="shop") renderProducts();
+  if(id==="cart") renderCart();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.addEventListener("click",e=>{
+  const r=e.target.closest("[data-route]");
+  if(r){e.preventDefault();route(r.dataset.route);}
+});
+document.querySelectorAll("[data-jump]").forEach(b=>b.addEventListener("click",()=>{
+  state.filter=b.dataset.jump;state.search="";document.getElementById("searchInput").value="";route("shop");
+}));
+
+
+const globalSearch = document.getElementById("globalSearch");
+const globalSearchBtn = document.getElementById("globalSearchBtn");
+
+function runGlobalSearch(){
+  state.search = globalSearch.value.trim();
+  route("shop");
+  renderProducts();
+}
+globalSearchBtn.addEventListener("click", runGlobalSearch);
+globalSearch.addEventListener("keydown", e => { if(e.key === "Enter") runGlobalSearch(); });
+
+const cards=[...document.querySelectorAll("#products .product-card")];
+function renderProducts(){
+  let shown=0;
+  cards.forEach(c=>{
+    const categoryOk=state.filter==="All"||c.dataset.category===state.filter;
+    const searchOk=!state.search||c.dataset.name.includes(state.search.toLowerCase());
+    const show=categoryOk&&searchOk;c.style.display=show?"":"none";if(show)shown++;
+  });
+  document.querySelectorAll(".chip").forEach(b=>b.classList.toggle("active",b.dataset.filter===state.filter));
+  document.getElementById("noResults").style.display=shown?"none":"block";
+}
+document.querySelectorAll(".chip").forEach(b=>b.addEventListener("click",()=>{state.filter=b.dataset.filter;renderProducts()}));
+
+const track=document.getElementById("track");
+function renderSlide(){track.style.transform=`translateX(-${state.slide*100}%)`;}
+document.getElementById("nextSlide").onclick=()=>{state.slide=(state.slide+1)%3;renderSlide()};
+document.getElementById("prevSlide").onclick=()=>{state.slide=(state.slide+2)%3;renderSlide()};
+
+function showToast(text){
+  const t=document.getElementById("toast");t.textContent=text;t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2200);
+}
+function addCart(name,price){
+  const found=state.cart.find(x=>x.name===name);
+  if(found)found.qty++;else state.cart.push({name,price:Number(price),qty:1});
+  document.getElementById("cartCount").textContent=state.cart.reduce((n,x)=>n+x.qty,0);
+  // Feedback intentionally omitted in the student demo.
+}
+document.querySelectorAll(".add-cart").forEach(b=>b.addEventListener("click",()=>addCart(b.dataset.name,b.dataset.price)));
+
+document.querySelectorAll(".view-details").forEach(b=>b.addEventListener("click",()=>{
+  const c=b.closest(".product-card");
+  document.getElementById("modalCat").textContent=c.dataset.category;
+  document.getElementById("modalName").textContent=c.querySelector("h3").textContent;
+  document.getElementById("modalPrice").textContent=c.querySelector("strong").textContent;
+  document.getElementById("modalInfo").textContent=c.querySelector(".meta").textContent+" · Availability: In Stock";
+  document.getElementById("modalArt").innerHTML=c.querySelector(".product-art").outerHTML;
+  document.getElementById("modalAdd").onclick=()=>{addCart(c.querySelector("h3").textContent,c.querySelector("strong").textContent.replace("SAR ",""));document.getElementById("modal").classList.remove("show")};
+  document.getElementById("modal").classList.add("show");
+}));
+document.getElementById("closeModal").onclick=()=>document.getElementById("modal").classList.remove("show");
+document.getElementById("modal").addEventListener("click",e=>{if(e.target.id==="modal")e.currentTarget.classList.remove("show")});
+
+function renderCart(){
+  const p=document.getElementById("cartPanel");
+  if(!state.cart.length){
+    p.innerHTML='<div style="text-align:center;padding:30px"><h3>Your cart is empty.</h3><p class="muted">Add a product from the catalogue to review it here.</p><button class="btn dark" id="goShop" type="button">Continue Shopping</button></div>';
+    document.getElementById("goShop").onclick=()=>route("shop");return;
+  }
+  const total=state.cart.reduce((n,x)=>n+x.price*x.qty,0);
+  p.innerHTML=state.cart.map((x,i)=>`<div class="cartrow"><div><strong>${x.name}</strong><div class="muted">Amaira Boutique</div></div><div class="qty"><button type="button" data-minus="${i}">−</button><span>${x.qty}</span><button type="button" data-plus="${i}">+</button></div><strong>SAR ${(x.price*x.qty).toFixed(0)}</strong></div>`).join("")+
+  `<div style="display:flex;justify-content:space-between;margin-top:18px;font-weight:900"><span>Order total</span><span>SAR ${total.toFixed(0)}</span></div><button id="checkout" class="btn wine" type="button" style="margin-top:15px">Proceed to Checkout</button><div id="checkMsg" class="msg"></div>`;
+  p.querySelectorAll("[data-minus]").forEach(b=>b.onclick=()=>{const i=+b.dataset.minus;state.cart[i].qty--;if(state.cart[i].qty<=0)state.cart.splice(i,1);updateCart()});
+  p.querySelectorAll("[data-plus]").forEach(b=>b.onclick=()=>{state.cart[+b.dataset.plus].qty++;updateCart()});
+  document.getElementById("checkout").onclick=()=>showMsg("checkMsg","err","Please log in or create an account before placing an order.");
+}
+function updateCart(){document.getElementById("cartCount").textContent=state.cart.reduce((n,x)=>n+x.qty,0);renderCart()}
+function showMsg(id,kind,text){const e=document.getElementById(id);e.className="msg show "+kind;e.textContent=text}
+
+document.getElementById("loginTab").onclick=()=>{
+  document.getElementById("loginForm").style.display="block";document.getElementById("signupForm").style.display="none";
+  document.getElementById("loginTab").classList.add("active");document.getElementById("signupTab").classList.remove("active");
+};
+document.getElementById("signupTab").onclick=()=>{
+  document.getElementById("loginForm").style.display="none";document.getElementById("signupForm").style.display="block";
+  document.getElementById("loginTab").classList.remove("active");document.getElementById("signupTab").classList.add("active");
+};
+
+// Student testing state: basic validation is intentionally incomplete.
+document.getElementById("loginForm").onsubmit=e=>{
+  e.preventDefault();
+  showMsg("loginMsg","ok","Login successful. Welcome back to Amaira Boutique.");
+};
+document.getElementById("signupForm").onsubmit=e=>{
+  e.preventDefault();
+  if(document.getElementById("signupPassword").value!==document.getElementById("confirmPassword").value){
+    showMsg("signupMsg","err","Passwords do not match.");return;
+  }
+  showMsg("signupMsg","ok","Registration completed successfully.");
+};
+document.getElementById("forgot").onclick=e=>{
+  e.preventDefault();showMsg("loginMsg","ok","A password reset link would be sent to your registered email.");
+};
+
+/* Delayed startup work makes load/performance testing meaningful. */
+function busyWork(ms){
+  const start=performance.now();let x=0;
+  while(performance.now()-start<ms){x+=Math.sqrt((x%97)+1);}
+  window.__demoWork=x;
+}
+setTimeout(()=>busyWork(850),160);
+
+setTimeout(()=>document.getElementById("loading").style.display="none",1100);
+route("home");
+</script>
+</body>
+</html>
